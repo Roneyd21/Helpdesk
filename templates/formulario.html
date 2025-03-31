@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Incidencia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/formulario.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='Css/icono.ico') }}" type="image/x-icon">
+    <!-- Vinculando SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logo">
+            <i class="fas fa-ticket-alt"></i>
+            <h1>Servicio de Soporte Tio Ammi</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">Crear Ticket de Incidencia</h1>
+
+        <div class="form-card">
+            <h2>Información de Usuario:</h2>
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group required">
+                        <label for="name" class="form-label">Nombre y Apellido</label>
+                        <input type="text" class="form-control" id="name" placeholder="Ingrese su nombre" required>
+                    </div>
+                    <div class="form-group required">
+                        <label for="email" class="form-label">Correo Electrónico: <small>(Se enviara un correo para seguimiento)</small></label>
+                        <input type="email" class="form-control" id="email" placeholder="ejemplo@tioammi.com.ve" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group required">
+                        <label for="department" class="form-label">Departamento</label>
+                        <select class="form-control" id="department" required>
+                            <option value="" selected disabled>Seleccione un Departamento</option>
+                            <option value="Administracion">Administración / Tributos</option>
+                            <option value="Recursos-Humanos">Recursos Humanos</option>
+                            <option value="Reclutamiento">Reclutamiento y Seleccion</option>
+                            <option value="Contabilidad">Contabilidad</option>
+                            <option value="Publicidad">Publicidad</option>
+                            <option value="Almacen">Almacen</option>
+                            <option value="Ventas">Ventas</option>
+                            <option value="Inventario">Inventario</option>
+                            <option value="Costos">Costos</option>
+                            <option value="Compras">Compras</option>
+                            <option value="Legal">Legal</option>
+                            <option value="Wiwu">Wiwu</option>
+                            <option value="Bbrose">Bbrose</option>
+                        </select>
+                    </div>
+                    <div class="form-group required">
+                        <label for="incidencia" class="form-label">Detalle de la Incidencia:</label>
+                        <select class="form-control" id="incidencia" required>
+                            <option value="" selected disabled>Seleccione una Incidencia</option>
+                            <option value="Fallas con la PC">Fallas con la PC</option>
+                            <option value="Fallas con el Internet">Fallas con el Internet</option>
+                            <option value="Problema con Impresora">Problema con Impresora</option>
+                            <option value="Problema con Programas (Galac, Stellar, otros)">Problema con Programas (Galac, Stellar, otros)</option>
+                            <option value="Otras...">Otras...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="form-section">
+                <h3 class="form-section-title">Detalles de la Incidencia:</h3>
+
+                <div class="form-row">
+                    <div class="form-group required full-width">
+                        <label for="description" class="form-label">Descripción Corta</label>
+                        <textarea class="form-control" id="description" placeholder="Proporcione una descripcion corta sobre la incidencia" required></textarea>
+                    </div>
+                </div>
+            
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label class="form-label">Nivel de Incidencia:</label>
+                        <div class="incident-level-options">
+                            <div class="incident-level-option">
+                                <input type="radio" name="incident-level" id="level-low" class="incident-level-input" value="Leve" checked>
+                                <label for="level-low" class="incident-level-label">
+                                    <div class="incident-level-icon icon-low">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="incident-level-text">
+                                        <h4>Leve</h4>
+                                        <p>Impacto mínimo</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="incident-level-option">
+                                <input type="radio" name="incident-level" id="level-medium" class="incident-level-input" value="Grave">
+                                <label for="level-medium" class="incident-level-label">
+                                    <div class="incident-level-icon icon-medium">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <div class="incident-level-text">
+                                        <h4>Grave</h4>
+                                        <p>Impacto significativo</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="incident-level-option">
+                                <input type="radio" name="incident-level" id="level-high" class="incident-level-input" value="Critica">
+                                <label for="level-high" class="incident-level-label">
+                                    <div class="incident-level-icon icon-high">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="incident-level-text">
+                                        <h4>Crítica</h4>
+                                        <p>Impacto severo, urgente</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label class="form-label">Archivos Adjuntos (opcional)</label>
+                        <div class="file-upload">
+                            <input type="file" id="file-input" multiple>
+                            <div class="file-upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-upload-text">
+                                <h4>Arrastre archivos aquí o haga clic para seleccionar</h4>
+                                <p>Puede adjuntar capturas de pantalla u otros archivos relevantes (máx. 5MB)</p>
+                            </div>
+                        </div>
+                        <div id="file-list"></div>
+                    </div>
+                </div>
+                -->
+            </div>
+
+            <div class="form-buttons">
+                <button id="cancelar" onclick="limpiar()" class="btn btn-secondary">Cancelar</button>
+                <button id="enviar" class="btn btn-primary">Crear Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; Área de Desarrollo - Tio Ammi</p>
+    </footer>
+
+    <script src="../static/Js/formulario.js"></script>
+</body>
+</html>
