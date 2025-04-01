@@ -66,14 +66,13 @@ def stats():
     top_problem_result = cursor.fetchone()
     top_problem = top_problem_result[0] if top_problem_result else 'N/A'
 
-    # Calcular el promedio de minutos entre HoraSolicitada y HoraAtendida para tickets resueltos
     cursor.execute("""
-        SELECT AVG(EXTRACT(EPOCH FROM (HoraTerminada::timestamp - HoraSolicitada::timestamp)) / 60) 
-        FROM Tickets 
+        SELECT AVG(EXTRACT(EPOCH FROM (
+            (Fecha || ' ' || HoraTerminada)::timestamp - (Fecha || ' ' || HoraSolicitada)::timestamp
+        )) / 60)
+        FROM Tickets
         WHERE Status = 'Finalizado'
     """)
-    # PostgreSQL no tiene julianday(). Se usa EXTRACT(EPOCH FROM timestamp) 
-    # julianday() convierte la fecha/hora en un número decimal con días como unidad.
     average_time = cursor.fetchone()[0]
     average_time = round(average_time, 2) if average_time else 0
 
@@ -156,12 +155,13 @@ def agregar_ticket():
             INSERT INTO Tickets 
             (Nombre, Correo, Departamento, Incidencia, Status, Fecha, HoraSolicitada)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
         '''
 
         cursor.execute(query, (name, correo, departamento, incidencia, status, fecha_actual, hora_solicitada))
         
-        # Obtener el ID del ticket recién insertado
-        numero_ticket = cursor.lastrowid
+        # Obtiene el ID del ticket insertado
+        numero_ticket = cursor.fetchone()[0]  
         
         # Confirmar la transacción
         conexion.commit()
