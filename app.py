@@ -68,10 +68,11 @@ def stats():
 
     # Calcular el promedio de minutos entre HoraSolicitada y HoraAtendida para tickets resueltos
     cursor.execute("""
-        SELECT AVG((julianday(HoraTerminada) - julianday(HoraSolicitada)) * 1440) 
+        SELECT AVG(EXTRACT(EPOCH FROM (HoraTerminada::timestamp - HoraSolicitada::timestamp)) / 60) 
         FROM Tickets 
         WHERE Status = 'Finalizado'
     """)
+    # PostgreSQL no tiene julianday(). Se usa EXTRACT(EPOCH FROM timestamp) 
     # julianday() convierte la fecha/hora en un número decimal con días como unidad.
     average_time = cursor.fetchone()[0]
     average_time = round(average_time, 2) if average_time else 0
@@ -96,8 +97,8 @@ def stats():
             HoraSolicitada, 
             HoraTerminada, 
             Tecnico
-        FROM tickets
-        WHERE Fecha = ?
+        FROM Tickets
+        WHERE Fecha = %s
         ORDER BY HoraSolicitada DESC
     """, (fecha_actual,))
     ticket_rows = cursor.fetchall()
@@ -154,8 +155,9 @@ def agregar_ticket():
         query = '''
             INSERT INTO Tickets 
             (Nombre, Correo, Departamento, Incidencia, Status, Fecha, HoraSolicitada)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         '''
+
         cursor.execute(query, (name, correo, departamento, incidencia, status, fecha_actual, hora_solicitada))
         
         # Obtener el ID del ticket recién insertado
@@ -205,11 +207,11 @@ def update_status(ticket_id):
         cursor = conexion.cursor()
 
         if new_status == "En Proceso":
-            cursor.execute("UPDATE Tickets SET Status = ?, Tecnico = ? WHERE id = ?", 
-                           (new_status, tecnico, ticket_id))
+            cursor.execute("UPDATE Tickets SET Status = %s, Tecnico = %s WHERE id = %s", 
+                        (new_status, tecnico, ticket_id))
         elif new_status == "Finalizado":
-            cursor.execute("UPDATE Tickets SET Status = ?, HoraTerminada = ? WHERE id = ?", 
-                           (new_status, hora_finalizada, ticket_id))
+            cursor.execute("UPDATE Tickets SET Status = %s, HoraTerminada = %s WHERE id = %s", 
+                        (new_status, hora_finalizada, ticket_id))
 
         conexion.commit()
 
