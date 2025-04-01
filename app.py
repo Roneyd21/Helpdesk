@@ -186,6 +186,8 @@ def agregar_ticket():
         }), 201
     except Exception as e:
         # Manejar errores y retornar mensaje de error
+        import traceback
+        print("Error en la Creacion:", traceback.format_exc())  # Esto imprimirá el error en la consola
         return jsonify({'error': f'Ocurrió un error: {str(e)}'}), 500
     
 #----------------------------------------------------------------------------
