@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Tops Mensuales</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/admin.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='Css/icono.ico') }}" type="image/x-icon">
+    <style>
+        /* Estilos adicionales exclusivos para el panel Tops (sin afectar el resto) */
+        .medal-icon {
+            margin-right: 6px;
+        }
+        .rank-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background-color: var(--gray-light);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-right: 12px;
+            color: var(--dark);
+        }
+        .rank-1 { background-color: #fbbf24; color: #78350f; }
+        .rank-2 { background-color: #e5e7eb; color: #374151; }
+        .rank-3 { background-color: #fed7aa; color: #7c2d12; }
+        
+        .tech-progress {
+            width: 100%;
+            background-color: var(--gray-light);
+            border-radius: 12px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-fill {
+            background-color: var(--primary);
+            height: 8px;
+            border-radius: 12px;
+            width: 0%;
+        }
+        .badge-efficient {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .tops-grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .ranking-card {
+            background: var(--white);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            padding: 1.2rem 1.5rem;
+            transition: all 0.2s;
+        }
+        .ranking-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .ranking-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ranking-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .ranking-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        .ranking-list li:last-child {
+            border-bottom: none;
+        }
+        .list-item-rank {
+            font-weight: 700;
+            width: 32px;
+            color: var(--gray);
+        }
+        .list-item-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .list-item-value {
+            font-weight: 700;
+            background: var(--light);
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+        .star-tech {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+        .insight-badge {
+            background: var(--primary);
+            color: white;
+            border-radius: 30px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .table-ticket-stats td:first-child, .table-ticket-stats th:first-child { padding-left: 0.5rem; }
+        .fa-trophy.text-warning { color: #fbbf24; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .text-small { font-size: 0.75rem; color: var(--gray); }
+        .avatar-symbol {
+            width: 32px;
+            height: 32px;
+            background: var(--gray-light);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+        /* Asegurar que las tarjetas dentro de tops-grid-2col tengan la misma altura */
+        .tops-grid-2col {
+            align-items: stretch !important;
+        }
+
+        .tops-grid-2col .ranking-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DE NAVEGACIÓN (igual a la referencia, con pestaña Tops activa) -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-chart-line"></i>
+            <span>Soporte Tío Ammi</span>
+        </div>
+        <div class="nav-menu">
+            <a href="/admin" class="nav-link">
+                <i class="fas fa-ticket"></i> Panel de Tickets
+            </a>
+            <a href="/stats" class="nav-link">
+                <i class="fas fa-chart-bar"></i> Estadísticas Hoy
+            </a>
+            <a href="/tops" class="nav-link active">
+                <i class="fas fa-trophy"></i> La Champions
+            </a>
+        </div>
+        <div class="nav-user">
+            <img src="{{ url_for('static', filename='Css/icono.ico') }}" alt="User">
+            <span>Admin Tops</span>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <!-- Título y período -->
+            <div class="flex-between" style="flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                <h2 class="page-title" style="margin-bottom: 0;">
+                    <i class="fas fa-ranking-star" style="color: var(--primary);"></i> Rankings del mes
+                </h2>
+                <div class="insight-badge" id="fecha-actual">
+                    <i class="fas fa-calendar-alt"></i> 
+                </div>
+            </div>
+            
+            <!-- Tarjetas resumen rápidas (métricas del mes) -->
+            <div class="stats-cards" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <div class="card-icon bg-primary">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Total tickets mes</p>
+                        <h3 id="stat-total-tickets">--</h3>
+                        <!-- <small id="stat-diff-tickets">Cargando...</small> -->
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon bg-success">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Técnico estrella</p>
+                        <h3>--</h3>
+                        <small>--</small>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon bg-warning">
+                        <i class="fas fa-gauge-high"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Mejor tiempo ⚡</p>
+                        <h3>--</h3>
+                        <small>--</small>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon bg-purple">
+                        <i class="fas fa-chart-simple"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Tiempo Promedio</p>
+                        <h3>--</h3>
+                        <small>--</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN PRINCIPAL: TOP 5 TÉCNICOS (con tickets y métricas extra) -->
+            <div class="tickets-section" style="height: auto; max-height: none; margin-bottom: 2rem; padding-bottom: 1rem;">
+                <h2 style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-users-viewfinder" style="color: var(--primary);"></i> 
+                    Top 5 técnicos · Más tickets resueltos (mes actual)
+                </h2>
+                <div class="table-responsive" style="overflow-x: auto;">
+                    <table class="tickets-table" style="min-width: 550px;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Técnico</th>
+                                <th>Tickets resueltos</th>
+                                <th>Tiempo promedio</th>
+                                <th>Eficiencia</th>
+                                <th>% del total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-top-tecnicos">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- OTROS RANKINGS ADICIONALES: Idea extra -> Top problemas / Top departamentos + eficiencia -->
+            <div class="tops-grid-2col">
+                <!-- Card: Top 5 incidencias más repetidas del mes -->
+                <div class="ranking-card">
+                    <h3>
+                        <i class="fas fa-bug" style="color: var(--warning);"></i> 
+                        Top 5 incidencias
+                        <span class="text-small" style="margin-left: auto;">frecuencia</span>
+                    </h3>
+
+                    <ul class="ranking-list" id="lista-incidencias"></ul>
+
+                    <div id="resumen-incidencias" class="text-small" style="margin-top: 0.5rem; color: var(--gray);">
+                        Cargando análisis de incidencias...
+                    </div>
+                </div>
+                
+                <!-- Card: Top 5 Departamentos con más solicitudes -->
+                <div class="ranking-card">
+                    <h3>
+                        <i class="fas fa-building" style="color: var(--success);"></i> 
+                        Departamentos más activos
+                    </h3>
+
+                    <ul class="ranking-list" id="lista-departamentos"></ul>
+
+                    <div class="tech-progress mt-2" style="height: 5px;">
+                        <div class="progress-fill" style="width: 100%; background: var(--success);"></div>
+                    </div>
+                    <div id="resumen-departamento" class="text-small mt-1">
+                        Cargando datos de departamento...
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEGUNDA FILA: TOP TÉCNICOS POR EFICIENCIA (tiempo promedio) + Estrella del Mes -->
+            <div class="tops-grid-2col" style="margin-top: 0.5rem;">
+                <div class="ranking-card" style="height: 100%; display: flex; flex-direction: column;">
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="margin-bottom: 0.5rem;">
+                            <i class="fas fa-microchip" style="color: var(--primary);"></i> 
+                            Usuarios con más incidencias
+                        </h3>
+                        <p class="text-small" style="margin-bottom: 1rem;">Estado de disponibilidad de técnicos en tiempo real (KPI Operativo)</p>
+                    </div>
+
+                    <div id="contenedor-workload" style="display: flex; flex-direction: column; gap: 1.2rem; flex-grow: 1;">
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border-radius: 0.75rem; border-left: 4px solid #0ea5e9;">
+                        <div style="color: #0c4a6e; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-lightbulb"></i> Recomendación de Kpi's
+                        </div>
+                        <p id="recomendacion-carga" style="color: #075985; font-size: 0.8rem; margin-top: 5px; margin-bottom: 0;">
+                            Calculando recomendación...
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Bloque: Gráfico de área polar (Polar Area) para tickets por técnico -->
+                <div class="ranking-card">
+                    <h3>
+                        <i class="fas fa-chart-line" style="color: var(--warning);"></i>
+                        Total tickets mes: <span id="stat-total-tickets-inline">--</span> · Distribución por técnico
+                    </h3>
+                    <div style="display: flex; justify-content: center; align-items: center; margin-top: 0.5rem; width: 100%;">
+                        <div style="position: relative; width: 100%; max-width: 500px; height: auto; aspect-ratio: 1 / 1;">
+                            <canvas id="ticketsPorTecnicoPolarChart" style="width: 100% !important; height: 100% !important;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TERCER BLOQUE: TABLA RESUMEN DE TICKETS POR TÉCNICO (detalle adicional) pero manteniendo la esencia de Tops
+            <div style="margin-top: 2rem; background: var(--white); border-radius: 1rem; padding: 1rem 1.2rem; box-shadow: var(--shadow);">
+                <h3 style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+                    <i class="fas fa-chart-pie"></i> Distribución mensual de tickets resueltos
+                    <span class="text-small" style="margin-left: auto;">Top 5 lideran el 89% de la carga</span>
+                </h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;">
+                    <div style="flex:1; min-width: 180px;">
+                        <div><i class="fas fa-user"></i> Ana Martínez</div>
+                        <div style="font-size: 2rem; font-weight: bold;">47</div>
+                        <div class="tech-progress"><div class="progress-fill" style="width: 100%;"></div></div>
+                    </div>
+                    <div style="flex:1; min-width: 180px;">
+                        <div><i class="fas fa-user"></i> Carlos López</div>
+                        <div style="font-size: 2rem; font-weight: bold;">38</div>
+                        <div class="tech-progress"><div class="progress-fill" style="width: 81%;"></div></div>
+                    </div>
+                    <div style="flex:1; min-width: 180px;">
+                        <div><i class="fas fa-user"></i> Marta Gómez</div>
+                        <div style="font-size: 2rem; font-weight: bold;">34</div>
+                        <div class="tech-progress"><div class="progress-fill" style="width: 72%;"></div></div>
+                    </div>
+                    <div style="flex:1; min-width: 180px;">
+                        <div><i class="fas fa-user"></i> Luis Fernández</div>
+                        <div style="font-size: 2rem; font-weight: bold;">29</div>
+                        <div class="tech-progress"><div class="progress-fill" style="width: 62%;"></div></div>
+                    </div>
+                    <div style="flex:1; min-width: 180px;">
+                        <div><i class="fas fa-user"></i> Sofía Ramírez</div>
+                        <div style="font-size: 2rem; font-weight: bold;">22</div>
+                        <div class="tech-progress"><div class="progress-fill" style="width: 47%; background:#f59e0b;"></div></div>
+                    </div>
+                </div>
+                <div class="text-small" style="margin-top: 1rem; border-top: 1px solid var(--gray-light); padding-top: 0.7rem;">
+                    <i class="fas fa-lightbulb"></i> Insight: Si sumamos los tickets del Top 5 → 170 tickets, el 100% de la demanda atendida en octubre.
+                </div>
+            </div>
+
+            Sección extra: TOP Técnicos por resolución rápida y calidad (adicional)
+            <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between; margin-top: 2rem;">
+                <div style="flex:1; background: linear-gradient(135deg, #fef9e6, #fff); border-radius: 1rem; padding: 1.2rem; border: 1px solid #ffe6b3;">
+                    <i class="fas fa-crown" style="font-size: 1.8rem; color: #eab308;"></i>
+                    <h4 style="margin: 0.5rem 0 0.2rem;">Técnico más versátil</h4>
+                    <p style="font-size: 1.4rem; font-weight: bold; margin: 0;">Ana Martínez</p>
+                    <small>Resolvió 5 tipos distintos de incidencias críticas, lidera en volumen y satisfacción.</small>
+                </div>
+                <div style="flex:1; background: #eff6ff; border-radius: 1rem; padding: 1.2rem;">
+                    <i class="fas fa-chart-line" style="font-size: 1.8rem; color: #2563eb;"></i>
+                    <h4 style="margin: 0.5rem 0 0.2rem;">Mayor crecimiento mensual</h4>
+                    <p style="font-size: 1.4rem; font-weight: bold; margin: 0;">+18%</p>
+                    <small>Carlos López aumentó sus tickets resueltos vs septiembre, mejora constante.</small>
+                </div>
+                <div style="flex:1; background: #f0fdf4; border-radius: 1rem; padding: 1.2rem;">
+                    <i class="fas fa-clock" style="font-size: 1.8rem; color: #10b981;"></i>
+                    <h4 style="margin: 0.5rem 0 0.2rem;">Récord de rapidez</h4>
+                    <p style="font-size: 1.4rem; font-weight: bold; margin: 0;">12 min</p>
+                    <small>Luis Fernández resolvió un ticket complejo en tiempo récord (caso destacado).</small>
+                </div>
+            </div> -->
+
+            <!-- NOTA ACLARATORIA (datos estáticos demostrativos) -->
+            <div style="margin-top: 2rem; padding: 1rem; background: var(--gray-light); border-radius: 0.75rem; text-align: center; font-size: 0.8rem; color: var(--gray-dark);">
+                <i class="fas fa-chart-simple"></i> Datos correspondientes al mes de Octubre 2024 (ejemplo estático). 
+                Los rankings se actualizarán automáticamente con datos reales una vez conectado a la base.
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="../static/Js/tops.js"></script>
+</body>
+</html>

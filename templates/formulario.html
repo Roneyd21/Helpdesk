@@ -3,160 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket de Incidencia</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sistema de Tickets | Crear Incidencia</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='Css/formulario.css') }}" />
     <link rel="icon" href="{{ url_for('static', filename='Css/icono.ico') }}" type="image/x-icon">
     <!-- Vinculando SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-logo">
-            <i class="fas fa-ticket-alt"></i>
-            <h1>Servicio de Soporte Tio Ammi</h1>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <h1 class="page-title">Crear Ticket de Incidencia</h1>
-
-        <div class="form-card">
-            <h2>Información de Usuario:</h2>
-            <div class="form-section">
-                <div class="form-row">
-                    <div class="form-group required">
-                        <label for="name" class="form-label">Nombre y Apellido</label>
-                        <input type="text" class="form-control" id="name" placeholder="Ingrese su nombre" required>
-                    </div>
-                    <div class="form-group required">
-                        <label for="email" class="form-label">Correo Electrónico: <small>(Se enviara un correo para seguimiento)</small></label>
-                        <input type="email" class="form-control" id="email" placeholder="ejemplo@tioammi.com.ve" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group required">
-                        <label for="department" class="form-label">Departamento</label>
-                        <select class="form-control" id="department" required>
-                            <option value="" selected disabled>Seleccione un Departamento</option>
-                            <option value="Administracion">Administración / Tributos</option>
-                            <option value="Recursos-Humanos">Recursos Humanos</option>
-                            <option value="Reclutamiento">Reclutamiento y Seleccion</option>
-                            <option value="Contabilidad">Contabilidad</option>
-                            <option value="Publicidad">Publicidad</option>
-                            <option value="Almacen">Almacen</option>
-                            <option value="Ventas">Ventas</option>
-                            <option value="Inventario">Inventario</option>
-                            <option value="Costos">Costos</option>
-                            <option value="Compras">Compras</option>
-                            <option value="Legal">Legal</option>
-                            <option value="Wiwu">Wiwu</option>
-                            <option value="Bbrose">Bbrose</option>
-                        </select>
-                    </div>
-                    <div class="form-group required">
-                        <label for="incidencia" class="form-label">Detalle de la Incidencia:</label>
-                        <select class="form-control" id="incidencia" required>
-                            <option value="" selected disabled>Seleccione una Incidencia</option>
-                            <option value="Fallas con la PC">Fallas con la PC</option>
-                            <option value="Fallas con el Internet">Fallas con el Internet</option>
-                            <option value="Problema con Impresora">Problema con Impresora</option>
-                            <option value="Problema con Programas (Galac, Stellar, otros)">Problema con Programas (Galac, Stellar, otros)</option>
-                            <option value="Otras...">Otras...</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <!--
-            <div class="form-section">
-                <h3 class="form-section-title">Detalles de la Incidencia:</h3>
-
-                <div class="form-row">
-                    <div class="form-group required full-width">
-                        <label for="description" class="form-label">Descripción Corta</label>
-                        <textarea class="form-control" id="description" placeholder="Proporcione una descripcion corta sobre la incidencia" required></textarea>
-                    </div>
-                </div>
-            
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label class="form-label">Nivel de Incidencia:</label>
-                        <div class="incident-level-options">
-                            <div class="incident-level-option">
-                                <input type="radio" name="incident-level" id="level-low" class="incident-level-input" value="Leve" checked>
-                                <label for="level-low" class="incident-level-label">
-                                    <div class="incident-level-icon icon-low">
-                                        <i class="fas fa-info-circle"></i>
-                                    </div>
-                                    <div class="incident-level-text">
-                                        <h4>Leve</h4>
-                                        <p>Impacto mínimo</p>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="incident-level-option">
-                                <input type="radio" name="incident-level" id="level-medium" class="incident-level-input" value="Grave">
-                                <label for="level-medium" class="incident-level-label">
-                                    <div class="incident-level-icon icon-medium">
-                                        <i class="fas fa-exclamation-circle"></i>
-                                    </div>
-                                    <div class="incident-level-text">
-                                        <h4>Grave</h4>
-                                        <p>Impacto significativo</p>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="incident-level-option">
-                                <input type="radio" name="incident-level" id="level-high" class="incident-level-input" value="Critica">
-                                <label for="level-high" class="incident-level-label">
-                                    <div class="incident-level-icon icon-high">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </div>
-                                    <div class="incident-level-text">
-                                        <h4>Crítica</h4>
-                                        <p>Impacto severo, urgente</p>
-                                    </div>
-                                </label>
-                            </div>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-blue-500 to-indigo-600 opacity-10 -z-10"></div>
+    
+    <!-- Floating decorative elements -->
+    <div class="absolute top-20 left-10 w-20 h-20 rounded-full bg-blue-400 opacity-10 animate-pulse animate-float" style="animation-delay: 0.5s;"></div>
+    <div class="absolute bottom-1/4 right-20 w-28 h-28 rounded-full bg-indigo-400 opacity-10 animate-pulse animate-float" style="animation-delay: 1s;"></div>
+    
+    <div class="w-full max-w-7xl mx-4 h-full">
+        <!-- Main card -->
+        <div class="glass-card overflow-hidden">
+            <div class="flex flex-col xl:flex-row h-full">
+                <!-- Form section -->
+                <div class="w-full xl:w-3/4 p-8 form-section">
+                    <div class="flex items-center mb-6 fade-in">
+                        <div class="bg-blue-100 p-3 rounded-xl mr-4">
+                            <i class="fas fa-ticket-alt text-blue-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800 leading-tight">Sistema de Tickets Tio Ammi</h1>
+                            <p class="text-gray-500 text-lg mt-1">Complete los campos requeridos</p>
                         </div>
                     </div>
-                </div>
-            
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label class="form-label">Archivos Adjuntos (opcional)</label>
-                        <div class="file-upload">
-                            <input type="file" id="file-input" multiple>
-                            <div class="file-upload-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
+                    
+                    <div class="form-content">
+                        <form id="ticketForm" class="space-y-6 fade-in" style="animation-delay: 0.2s;">
+                            <!-- User Information -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-base font-medium text-gray-700">Nombre Completo *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <input id="name" type="text" required
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect transition duration-200"
+                                            placeholder="Juan Pérez">
+                                    </div>
+                                </div>
+                    
+                                <div class="space-y-2">
+                                    <label class="block text-base font-medium text-gray-700">Departamento *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-building absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <select id="department" required
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect appearance-none transition duration-200">
+                                            <option value="" selected disabled>Seleccione un Departamento</option>
+                                            <option value="Administracion">Administración / Tributos</option>
+                                            <option value="Recursos-Humanos">Recursos Humanos</option>
+                                            <option value="Reclutamiento">Reclutamiento y Seleccion</option>
+                                            <option value="Tesoreria">Tesorería</option>
+                                            <option value="Presidencia">Presidencia</option>
+                                            <option value="Publicidad">Publicidad</option>
+                                            <option value="Almacen">Almacen</option>
+                                            <option value="Codificacion">Codificacion</option>
+                                            <option value="Inventario">Inventario</option>
+                                            <option value="Auditoria">Auditoria</option>
+                                            <option value="Reposicion">Reposicion</option>
+                                            <option value="Facturacion">Facturacion</option>
+                                            <option value="Ferreteria">Ferreteria</option>
+                                            <option value="Ventas">Ventas</option>
+                                            <option value="Costos">Costos</option>
+                                            <option value="Compras">Compras</option>
+                                            <option value="Legal">Legal</option>
+                                            <option value="Wiwu">Wiwu</option>
+                                            <option value="Arquitectura">Arquitectura</option>
+                                            <option value="Proyectos">Proyectos</option>
+                                            <option value="Bbrose">Bbrose</option>
+                                            <option value="Servicio-Medico">Servicio Medico</option>
+                                            <option value="Yaguara-1">Yaguara 1</option>
+                                            <option value="Yaguara-3">Yaguara 3</option>
+                                            <option value="Tecnologia">Técnologia</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg pointer-events-none"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-2">
+                                    <label class="block text-base font-medium text-gray-700">Correo Electrónico *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <input id="email" type="email" required
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect transition duration-200"
+                                            placeholder="ejemplo@empresa.com">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-base font-medium text-gray-700">Descripcion Corta *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <input id="desc" type="text"
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect transition duration-200"
+                                            placeholder="Detalle si incidencia (Si lo desea)">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="file-upload-text">
-                                <h4>Arrastre archivos aquí o haga clic para seleccionar</h4>
-                                <p>Puede adjuntar capturas de pantalla u otros archivos relevantes (máx. 5MB)</p>
+                            
+                            <!-- Incident Type Selection -->
+                            <div class="space-y-3">
+                                <label class="block text-base font-medium text-gray-700">Detalle de la Incidencia *</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <button id="incidencia1" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-blue-100 p-2 rounded-lg mr-3 text-blue-500">
+                                            <i class="fas fa-desktop"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Fallas con la PC</h3>
+                                            <p class="text-xs text-gray-500 mt-1">Problemas con el equipo de computo</p>
+                                        </div>
+                                    </button>
+
+                                    <button id="incidencia2" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-purple-100 p-2 rounded-lg mr-3 text-purple-500">
+                                            <i class="fas fa-wifi"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Fallas con el internet</h3>
+                                            <p class="text-xs text-gray-500 mt-1">Problemas de conectividad</p>
+                                        </div>
+                                    </button>
+
+                                    <button id="incidencia3" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-green-100 p-2 rounded-lg mr-3 text-green-500">
+                                            <i class="fas fa-print"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Problemas con la impresora</h3>
+                                            <p class="text-xs text-gray-500 mt-1">Fallas en impresión o conexión</p>
+                                        </div>
+                                    </button>
+
+                                    <button id="incidencia4" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-yellow-100 p-2 rounded-lg mr-3 text-yellow-500">
+                                            <i class="fas fa-tint"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Falta de tóner o cartucho</h3>
+                                            <p class="text-xs text-gray-500 mt-1">Necesidad de suministros</p>
+                                        </div>
+                                    </button>
+
+                                    <button id="incidencia5" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-red-100 p-2 rounded-lg mr-3 text-red-500">
+                                            <i class="fas fa-code"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Problemas con programas</h3>
+                                            <p class="text-xs text-gray-500 mt-1">Galac, Stellar u otros</p>
+                                        </div>
+                                    </button>
+
+                                    
+                                    <button id="incidencia6" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-red-100 p-2 rounded-lg mr-3 text-orange-500">
+                                            <i class="fas fa-code"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Sin Acceso a Paginas</h3>
+                                            <p class="text-xs text-gray-500 mt-1">No puedo acceder a una Pagina, pero tengo Internet</p>
+                                        </div>
+                                    </button>
+
+
+                                    <button id="incidencia7" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-gray-100 p-2 rounded-lg mr-3 text-gray-500">
+                                            <i class="fas fa-question-circle"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Nuevo Ingreso</h3>
+                                            <p class="text-xs text-gray-500 mt-1">Una persona nueva se une a nuestro Equipo</p>
+                                        </div>
+                                    </button>
+
+                                    <button id="incidencia7" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                        <div class="bg-gray-100 p-2 rounded-lg mr-3 text-gray-500">
+                                            <i class="fas fa-question-circle"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium">Otras incidencias</h3>
+                                            <p class="text-xs text-gray-500 mt-1">Otra situación no listada</p>
+                                        </div>
+                                    </button>
+                                </div>
+                                <!-- Hidden input to store selected incident -->
+                                <input type="hidden" id="incidencia" name="incidencia" value="">
                             </div>
-                        </div>
-                        <div id="file-list"></div>
+                            
+                            <!-- Submit Button -->
+                            <!-- <div class="pt-4">
+                                <button type="submit" id="enviar" class="btn-glow w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-xl transition duration-200">
+                                    <i class="fas fa-paper-plane mr-2"></i> Crear Ticket
+                                </button>
+                            </div> -->
+                        </form>
                     </div>
                 </div>
-                -->
-            </div>
+                
+                <!-- Preview section -->
+                <div class="w-full xl:w-1/3 bg-gradient-to-b from-blue-50 to-indigo-50 p-8 flex flex-col justify-between">
+                    <div class="ticket-preview bg-white rounded-xl shadow-md p-6 mb-6">
+                        <h3 class="text-xs font-semibold text-blue-500 uppercase tracking-wider">Vista Previa</h3>
+                        <h2 class="text-xl font-bold text-gray-800 mb-4" id="preview-incidence">Incidencia</h2>
+                        
+                        <div class="space-y-4">
+                            <div><p class="text-xs text-gray-500">Solicitante</p><p class="text-sm font-medium" id="preview-name">Prueba Usuario</p></div>
+                            <div><p class="text-xs text-gray-500">Departamento</p><p class="text-sm font-medium" id="preview-department">Presidencia</p></div>
+                            <div><p class="text-xs text-gray-500">Fecha</p><p class="text-sm font-medium" id="current-date">Cargando...</p></div>
+                            
+                        <div class="pt-4 border-t border-gray-100">
+                            <button type="button" onclick="abrirModalFoto()" id="btn-foto" 
+                                class="w-full py-3 px-4 bg-white border-2 border-dashed border-blue-200 hover:border-blue-400 hover:bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center transition-all duration-300 group">
+                                <i class="fas fa-camera mr-2 group-hover:scale-110 transition-transform"></i> 
+                                <span id="foto-status" class="font-medium">Anexar Evidencia (Foto)</span>
+                            </button>
+                        </div>
+                        </div>
+                    </div>
 
-            <div class="form-buttons">
-                <button id="cancelar" onclick="limpiar()" class="btn btn-secondary">Cancelar</button>
-                <button id="enviar" class="btn btn-primary">Crear Ticket</button>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <p class="text-xs text-blue-600"><i class="fas fa-info-circle mr-1"></i> La foto es opcional, pero ayuda a resolver el problema más rápido. Cualquier duda te puedes comunicar con nosotros al correo: admin@tioammi.com</p>
+                        </div>
+                        
+                        <button type="submit" form="ticketForm" id="enviar" class="btn-glow w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition duration-200 flex items-center justify-center">
+                            <i class="fas fa-paper-plane mr-2"></i> CREAR TICKET
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; Área de Desarrollo - Tio Ammi</p>
-    </footer>
+    
+    <!-- Success notification -->
+    <div id="successNotification" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 hidden notification-slide">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>¡Incidencia reportada exitosamente!</span>
+        </div>
+    </div>
 
     <script src="../static/Js/formulario.js"></script>
+
 </body>
 </html>

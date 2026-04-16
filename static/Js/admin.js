@@ -1,6 +1,20 @@
-function changeStatus(ticketId) {
+async function changeStatus(ticketId) {
+    // 1. Buscamos la descripción antes de mostrar el modal
+    let descripcion = "Cargando...";
+
+    try {
+        const response = await fetch(`/get-description/${ticketId}`);
+        const data = await response.json();
+        descripcion = data.description;
+    } catch (error) {
+        descripcion = "Error al cargar descripción";
+    }
+
     Swal.fire({
         title: "Modificar Estatus",
+        html: `<div style="text-align: left; background: #f3f4f6; pading: 10px; border-radius: 8px; margin-bottom: 10px;">
+                <strong>Descripción del Usuario:</strong> <br><br> ${descripcion}
+               </div>`,
         input: "select",
         inputOptions: {
             "En Proceso": "En Proceso",
@@ -21,11 +35,14 @@ function changeStatus(ticketId) {
                     title: "Selecciona un técnico",
                     input: "select",
                     inputOptions: {
-                        "Andres": "Andres",
-                        "Yoscar": "Yoscar",
-                        "Rances": "Rances",
-                        "Cesar": "Cesar",
-                        "Jesus": "Jesus"
+                        "Cesar Serrano": "Cesar Serrano",
+                        "Andres Mayora": "Andres Mayora",
+                        "Yoscar Rodriguez": "Yoscar Rodriguez",
+                        "Rances Romero": "Rances Romero",
+                        "Luis Valenzuela": "Luis Valenzuela",
+                        "Ricardo Vidal": "Ricardo Vidal",
+                        "Simon Vargas": "Simon Vargas",
+                        "Jesus Luces": "Jesus Luces"
                     },
                     inputPlaceholder: "Selecciona un técnico",
                     showCancelButton: true,
@@ -46,28 +63,28 @@ function changeStatus(ticketId) {
                             },
                             body: JSON.stringify({ status: status, technician: result.value })
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                let statusElement = document.getElementById(`status-${ticketId}`);
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    let statusElement = document.getElementById(`status-${ticketId}`);
 
-                                // Cambiar el texto y la clase del estado según la selección
-                                if (status === "En Proceso") {
-                                    statusElement.className = "ticket-status status-open";
-                                    statusElement.textContent = "En Proceso";
-                                } else if (status === "Finalizado"){
-                                    statusElement.className = "ticket-status status-completed";
-                                    statusElement.textContent = "Finalizado";
+                                    // Cambiar el texto y la clase del estado según la selección
+                                    if (status === "En Proceso") {
+                                        statusElement.className = "ticket-status status-open";
+                                        statusElement.textContent = "En Proceso";
+                                    } else if (status === "Finalizado") {
+                                        statusElement.className = "ticket-status status-completed";
+                                        statusElement.textContent = "Finalizado";
+                                    }
+
+                                    Swal.fire("¡Actualizado!", "Tu Ticket se ha sido modificado.", "success")
+                                        .then(() => location.reload()); // Refresca la página
+
+                                } else {
+                                    Swal.fire("Error", "No se pudo actualizar el estado.", "error");
                                 }
-
-                                Swal.fire("¡Actualizado!", "Tu Ticket se ha sido modificado.", "success")
-                                .then(() => location.reload()); // Refresca la página
-
-                            } else {
-                                Swal.fire("Error", "No se pudo actualizar el estado.", "error");
-                            }
-                        })
-                        .catch(() => Swal.fire("Error", "No se pudo conectar con el servidor.", "error"));
+                            })
+                            .catch(() => Swal.fire("Error", "No se pudo conectar con el servidor.", "error"));
                     }
                 });
             }
@@ -80,16 +97,16 @@ function changeStatus(ticketId) {
                     },
                     body: JSON.stringify({ status: status })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire("¡Actualizado!", "Tu ticket ha finalizado.", "success")
-                        .then(() => location.reload()); // Refresca la página
-                    } else {
-                        Swal.fire("Error", "No se pudo actualizar el estado.", "error");
-                    }
-                })
-                .catch(() => Swal.fire("Error", "No se pudo conectar con el servidor.", "error"));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire("¡Actualizado!", "Tu ticket ha finalizado.", "success")
+                                .then(() => location.reload()); // Refresca la página
+                        } else {
+                            Swal.fire("Error", "No se pudo actualizar el estado.", "error");
+                        }
+                    })
+                    .catch(() => Swal.fire("Error", "No se pudo conectar con el servidor.", "error"));
             }
         }
     });
