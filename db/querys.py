@@ -27,6 +27,7 @@ class QuerysMensuales:
         AND horasolicitada < horaterminada
         AND EXTRACT(YEAR FROM fecha) = EXTRACT(YEAR FROM CURRENT_DATE)
         AND EXTRACT(MONTH FROM fecha) = EXTRACT(MONTH FROM CURRENT_DATE)
+		AND tecnico IS NOT NULL
         GROUP BY tecnico
         ORDER BY promedio_minutos ASC
         LIMIT 1;
@@ -54,6 +55,8 @@ class QueryTecnicosTop5:
         JOIN totales_mensuales tm ON TO_CHAR(t.fecha, 'YYYY-MM') = tm.mes
         WHERE t.status = 'Finalizado'
         AND t.horasolicitada < t.horaterminada
+        AND EXTRACT(YEAR FROM fecha) = EXTRACT(YEAR FROM CURRENT_DATE)
+		AND EXTRACT(MONTH FROM fecha) = EXTRACT(MONTH FROM CURRENT_DATE)
         GROUP BY TO_CHAR(t.fecha, 'YYYY-MM'), t.tecnico, tm.total_tickets_mes
         ORDER BY 
             TO_CHAR(t.fecha, 'YYYY-MM') DESC,

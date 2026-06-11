@@ -65,7 +65,7 @@ async function cargarTop5Tecnicos() {
                     </td>
                     <td><span class="badge-efficient" style="background:#dbeafe; color:#1e3a8a;">${tec.tickets_tecnico} tickets</span></td>
                     <td>${Math.round(tec.promedio_minutos)} min</td>
-                    <td><span class="status-badge-ok">${tec.promedio_minutos < 70 ? '⚡ Alto rend.' : 'Estable'}</span></td>
+                    <td><span class="status-badge-ok">${tec.promedio_minutos < 30 ? '⚡ Alto rend.' : 'Estable'}</span></td>
                     <td>${tec.porcentaje_del_mes}%</td>
                 </tr>
             `;

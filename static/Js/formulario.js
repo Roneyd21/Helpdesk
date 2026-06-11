@@ -104,6 +104,85 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// ========== NUEVO: Switch Tecnología / Compras Nacionales ==========
+const modoTecno = document.getElementById('modoTecnologia');
+const modoCompras = document.getElementById('modoCompras');
+const incidenciasDiv = document.getElementById('incidenciasContainer');
+const requerimientosDiv = document.getElementById('requerimientosContainer');
+
+// Función para cambiar de modo
+function cambiarModo(modo) {
+    if (modo === 'tecnologia') {
+        incidenciasDiv.classList.remove('hidden');
+        requerimientosDiv.classList.add('hidden');
+        modoTecno.classList.add('bg-blue-500', 'text-white', 'shadow-sm');
+        modoTecno.classList.remove('text-gray-600', 'hover:text-gray-800');
+        modoCompras.classList.remove('bg-blue-500', 'text-white', 'shadow-sm');
+        modoCompras.classList.add('text-gray-600', 'hover:text-gray-800');
+        
+        // Limpiar selección de requerimientos
+        document.querySelectorAll('.requerimiento-btn').forEach(btn => {
+            btn.classList.remove('selected', 'border-blue-400');
+        });
+        // Si no hay ninguna incidencia seleccionada, resetear preview
+        if (!document.querySelector('.incident-btn.selected')) {
+            document.getElementById('preview-incidence').textContent = 'Incidencia';
+            document.getElementById('incidencia').value = '';
+        } else {
+            // Si ya había una incidencia seleccionada, actualizar preview
+            const selectedInc = document.querySelector('.incident-btn.selected');
+            if (selectedInc) {
+                const title = selectedInc.querySelector('h3').textContent;
+                document.getElementById('preview-incidence').textContent = title;
+                document.getElementById('incidencia').value = title;
+            }
+        }
+    } 
+    else if (modo === 'compras') {
+        incidenciasDiv.classList.add('hidden');
+        requerimientosDiv.classList.remove('hidden');
+        modoCompras.classList.add('bg-blue-500', 'text-white', 'shadow-sm');
+        modoCompras.classList.remove('text-gray-600', 'hover:text-gray-800');
+        modoTecno.classList.remove('bg-blue-500', 'text-white', 'shadow-sm');
+        modoTecno.classList.add('text-gray-600', 'hover:text-gray-800');
+        
+        // Limpiar selección de incidencias
+        document.querySelectorAll('.incident-btn').forEach(btn => {
+            btn.classList.remove('selected', 'border-blue-400');
+        });
+        // Si no hay ningún requerimiento seleccionado, resetear preview
+        if (!document.querySelector('.requerimiento-btn.selected')) {
+            document.getElementById('preview-incidence').textContent = 'Requerimiento';
+            document.getElementById('incidencia').value = '';
+        } else {
+            const selectedReq = document.querySelector('.requerimiento-btn.selected');
+            if (selectedReq) {
+                const title = selectedReq.querySelector('h3').textContent;
+                document.getElementById('preview-incidence').textContent = title;
+                document.getElementById('incidencia').value = title;
+            }
+        }
+    }
+}
+
+// Eventos para los botones del switch
+// modoTecno.addEventListener('click', () => cambiarModo('tecnologia'));
+// modoCompras.addEventListener('click', () => cambiarModo('compras'));
+
+// Lógica para los nuevos botones de requerimientos (igual que las incidencias)
+const requerimientoBtns = document.querySelectorAll('.requerimiento-btn');
+requerimientoBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Quitar selección de otros requerimientos
+        requerimientoBtns.forEach(b => b.classList.remove('selected', 'border-blue-400'));
+        this.classList.add('selected', 'border-blue-400');
+        
+        const reqTitle = this.querySelector('h3').textContent;
+        // Actualizar preview y hidden input
+        document.getElementById('preview-incidence').textContent = reqTitle;
+        document.getElementById('incidencia').value = reqTitle;
+    });
+});
 
 let fotoSeleccionada = null; // Variable global
 
@@ -134,6 +213,7 @@ function abrirModalFoto() {
         }
     });
 }
+
 // function abrirModalFoto() {
 //     Swal.fire({
 //         title: 'Cargar Evidencia',
@@ -160,18 +240,30 @@ function abrirModalFoto() {
 //     });
 // }
 
-function limpiar() {
+// ========== MODIFICAR función limpiar (para resetear el switch y contenedores) ==========
+window.limpiar = function() {
     document.getElementById("ticketForm").reset();
-    fotoSeleccionada = null; // Resetear la foto
+    fotoSeleccionada = null;
     
-    // Resetear el botón de foto a su estado original
+    // Resetear botón de foto
     const btnFoto = document.getElementById('btn-foto');
     document.getElementById('foto-status').textContent = "Anexar Evidencia (Foto)";
-    btnFoto.className = "w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg flex items-center justify-center transition";
+    btnFoto.className = "w-full py-3 px-4 bg-white border-2 border-dashed border-blue-200 hover:border-blue-400 hover:bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center transition-all duration-300 group";
     
-    // Resetear estilos de los botones de incidencia
+    // Resetear incidencias y requerimientos seleccionados
     document.querySelectorAll('.incident-btn').forEach(b => b.classList.remove('selected', 'border-blue-400'));
+    document.querySelectorAll('.requerimiento-btn').forEach(b => b.classList.remove('selected', 'border-blue-400'));
+    
+    // Resetear el switch a modo Tecnología (por defecto)
+    cambiarModo('tecnologia');
+    
+    // Resetear preview
     document.getElementById('preview-incidence').textContent = 'Incidencia';
     document.getElementById('preview-name').textContent = 'Prueba Usuario';
     document.getElementById('preview-department').textContent = 'Presidencia';
-}
+    document.getElementById('incidencia').value = '';
+    
+    // Opcional: resetear campos de texto manualmente (el .reset() ya lo hace, pero el preview se actualiza con eventos)
+    document.getElementById('preview-name').textContent = document.getElementById('name').value || 'Prueba Usuario';
+    document.getElementById('preview-department').textContent = document.getElementById('department').value || 'Presidencia';
+};

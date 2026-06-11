@@ -108,91 +108,84 @@
                             
                             <!-- Incident Type Selection -->
                             <div class="space-y-3">
-                                <label class="block text-base font-medium text-gray-700">Detalle de la Incidencia *</label>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <button id="incidencia1" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-blue-100 p-2 rounded-lg mr-3 text-blue-500">
-                                            <i class="fas fa-desktop"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Fallas con la PC</h3>
-                                            <p class="text-xs text-gray-500 mt-1">Problemas con el equipo de computo</p>
-                                        </div>
-                                    </button>
+                                <!-- Switch de modo (Tecnología / Compras Nacionales) -->
+                                <!-- <div class="flex items-center space-x-4 mb-4" style="text-align: center; justify-content: center; align-items: center;">
+                                    <span class="text-sm font-medium text-gray-700">Modo:</span>
+                                    <div class="flex bg-gray-100 rounded-xl p-1">
+                                        <button type="button" id="modoTecnologia" class="modo-btn px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-blue-500 text-white shadow-sm">
+                                            Tecnología
+                                        </button>
+                                        <button type="button" id="modoCompras" class="modo-btn px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 hover:text-gray-800">
+                                            Compras Nacionales
+                                        </button>
+                                    </div>
+                                </div> -->
 
-                                    <button id="incidencia2" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-purple-100 p-2 rounded-lg mr-3 text-purple-500">
-                                            <i class="fas fa-wifi"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Fallas con el internet</h3>
-                                            <p class="text-xs text-gray-500 mt-1">Problemas de conectividad</p>
-                                        </div>
-                                    </button>
-
-                                    <button id="incidencia3" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-green-100 p-2 rounded-lg mr-3 text-green-500">
-                                            <i class="fas fa-print"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Problemas con la impresora</h3>
-                                            <p class="text-xs text-gray-500 mt-1">Fallas en impresión o conexión</p>
-                                        </div>
-                                    </button>
-
-                                    <button id="incidencia4" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-yellow-100 p-2 rounded-lg mr-3 text-yellow-500">
-                                            <i class="fas fa-tint"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Falta de tóner o cartucho</h3>
-                                            <p class="text-xs text-gray-500 mt-1">Necesidad de suministros</p>
-                                        </div>
-                                    </button>
-
-                                    <button id="incidencia5" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-red-100 p-2 rounded-lg mr-3 text-red-500">
-                                            <i class="fas fa-code"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Problemas con programas</h3>
-                                            <p class="text-xs text-gray-500 mt-1">Galac, Stellar u otros</p>
-                                        </div>
-                                    </button>
-
-                                    
-                                    <button id="incidencia6" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-red-100 p-2 rounded-lg mr-3 text-orange-500">
-                                            <i class="fas fa-code"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Sin Acceso a Paginas</h3>
-                                            <p class="text-xs text-gray-500 mt-1">No puedo acceder a una Pagina, pero tengo Internet</p>
-                                        </div>
-                                    </button>
-
-
-                                    <button id="incidencia7" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-gray-100 p-2 rounded-lg mr-3 text-gray-500">
-                                            <i class="fas fa-question-circle"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Nuevo Ingreso</h3>
-                                            <p class="text-xs text-gray-500 mt-1">Una persona nueva se une a nuestro Equipo</p>
-                                        </div>
-                                    </button>
-
-                                    <button id="incidencia7" type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
-                                        <div class="bg-gray-100 p-2 rounded-lg mr-3 text-gray-500">
-                                            <i class="fas fa-question-circle"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium">Otras incidencias</h3>
-                                            <p class="text-xs text-gray-500 mt-1">Otra situación no listada</p>
-                                        </div>
-                                    </button>
+                                <!-- Contenedor de Incidencias (Tecnología) -->
+                                <div id="incidenciasContainer" class="space-y-3">
+                                    <label class="block text-base font-medium text-gray-700">Detalle de la Incidencia *</label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <!-- Tus botones originales (sin cambios) -->
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-blue-100 p-2 rounded-lg mr-3 text-blue-500"><i class="fas fa-desktop"></i></div>
+                                            <div><h3 class="font-medium">Fallas con la PC</h3><p class="text-xs text-gray-500 mt-1">Problemas con el equipo de computo</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-purple-100 p-2 rounded-lg mr-3 text-purple-500"><i class="fas fa-wifi"></i></div>
+                                            <div><h3 class="font-medium">Fallas con el internet</h3><p class="text-xs text-gray-500 mt-1">Problemas de conectividad</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-green-100 p-2 rounded-lg mr-3 text-green-500"><i class="fas fa-print"></i></div>
+                                            <div><h3 class="font-medium">Problemas con la impresora</h3><p class="text-xs text-gray-500 mt-1">Fallas en impresión o conexión</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-yellow-100 p-2 rounded-lg mr-3 text-yellow-500"><i class="fas fa-tint"></i></div>
+                                            <div><h3 class="font-medium">Falta de tóner o cartucho</h3><p class="text-xs text-gray-500 mt-1">Necesidad de suministros</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-red-100 p-2 rounded-lg mr-3 text-red-500"><i class="fas fa-code"></i></div>
+                                            <div><h3 class="font-medium">Problemas con programas</h3><p class="text-xs text-gray-500 mt-1">Galac, Stellar u otros</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-orange-100 p-2 rounded-lg mr-3 text-orange-500"><i class="fas fa-ban"></i></div>
+                                            <div><h3 class="font-medium">Sin Acceso a Paginas</h3><p class="text-xs text-gray-500 mt-1">No puedo acceder a una Pagina, pero tengo Internet</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-gray-100 p-2 rounded-lg mr-3 text-gray-500"><i class="fas fa-user-plus"></i></div>
+                                            <div><h3 class="font-medium">Nuevo Ingreso</h3><p class="text-xs text-gray-500 mt-1">Una persona nueva se une a nuestro Equipo</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-gray-100 p-2 rounded-lg mr-3 text-gray-500"><i class="fas fa-question-circle"></i></div>
+                                            <div><h3 class="font-medium">Otras incidencias</h3><p class="text-xs text-gray-500 mt-1">Otra situación no listada</p></div>
+                                        </button>
+                                    </div>
                                 </div>
-                                <!-- Hidden input to store selected incident -->
+
+                                <!-- Contenedor de Requerimientos (Compras Nacionales) - inicialmente oculto -->
+                                <div id="requerimientosContainer" class="space-y-3 hidden">
+                                    <label class="block text-base font-medium text-gray-700">Requerimiento *</label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <!-- 4 Requerimientos de ejemplo (cámbialos después) -->
+                                        <button type="button" class="requerimiento-option flex items-center p-4 border border-gray-200 rounded-xl text-left requerimiento-btn">
+                                            <div class="bg-green-100 p-2 rounded-lg mr-3 text-green-600"><i class="fas fa-file-invoice"></i></div>
+                                            <div><h3 class="font-medium">Solicitud de Cotización</h3><p class="text-xs text-gray-500 mt-1">Pedir precios a proveedores</p></div>
+                                        </button>
+                                        <button type="button" class="requerimiento-option flex items-center p-4 border border-gray-200 rounded-xl text-left requerimiento-btn">
+                                            <div class="bg-blue-100 p-2 rounded-lg mr-3 text-blue-600"><i class="fas fa-boxes"></i></div>
+                                            <div><h3 class="font-medium">Requerimiento de Materiales</h3><p class="text-xs text-gray-500 mt-1">Solicitar materiales de oficina/operación</p></div>
+                                        </button>
+                                        <button type="button" class="requerimiento-option flex items-center p-4 border border-gray-200 rounded-xl text-left requerimiento-btn">
+                                            <div class="bg-purple-100 p-2 rounded-lg mr-3 text-purple-600"><i class="fas fa-check-double"></i></div>
+                                            <div><h3 class="font-medium">Autorización de Compra</h3><p class="text-xs text-gray-500 mt-1">Solicitar aprobación para comprar</p></div>
+                                        </button>
+                                        <button type="button" class="requerimiento-option flex items-center p-4 border border-gray-200 rounded-xl text-left requerimiento-btn">
+                                            <div class="bg-yellow-100 p-2 rounded-lg mr-3 text-yellow-600"><i class="fas fa-truck"></i></div>
+                                            <div><h3 class="font-medium">Revisión de Proveedores</h3><p class="text-xs text-gray-500 mt-1">Evaluar o dar de alta un proveedor</p></div>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden input (sigue igual) -->
                                 <input type="hidden" id="incidencia" name="incidencia" value="">
                             </div>
                             

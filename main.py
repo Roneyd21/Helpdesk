@@ -20,6 +20,10 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 @app.route('/')
 def form():
     return render_template('formulario.html')
+#-------------------------------------------------------
+@app.route('/tiendas')
+def tiendas():
+    return render_template('tiendas.html')
 
 #------------------------------------------------------------------------
 @app.route('/admin')
@@ -183,10 +187,6 @@ def tops_5():
 
         def convertir(lista_tuplas):
             return [dict(zip(["nombre", "tickets", "porcentaje"] if len(t) == 3 else ["nombre", "tickets"], t)) for t in lista_tuplas]
-
-        # top5_depar: (Depar, Ticket)
-        # top5_inci: (Inci, Ticket)
-        # top5_user: (nombre, Ticket, Porcentaje)
         
         return jsonify({
             "top5_departamentos": [{"departamento": d[0], "tickets": d[1]} for d in top5_depar],
@@ -216,4 +216,4 @@ def promedios():
     
 #---------------------------------------------------------------------------------------------------------------------------------    
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=False)

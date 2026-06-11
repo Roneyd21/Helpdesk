@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ticket | Tiendas</title>
+    <!-- Tailwind + Font Awesome + SweetAlert2 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Custom styles for glass effect and animations - TIENDAS VERSION */
+        body {
+            background: linear-gradient(135deg, #01119c 0%, #0092ac 100%);
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .input-focus-effect:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .incident-btn, .requerimiento-btn {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .incident-btn.active {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+            transform: scale(1.01);
+        }
+        
+        .btn-glow {
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+            background-color: #059669 !important;
+        }
+        
+        .notification-slide {
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-float {
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Custom scroll */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 10px;
+        }
+        
+        /* disabled requerimiento style */
+        .modo-btn-disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.1);
+        }
+        
+        .modo-active {
+            background-color: #10b981 !important;
+            color: white !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-6">
+
+    <!-- Floating decorative elements (tonos verdosos para tiendas) -->
+    <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-emerald-500 to-teal-600 opacity-10 -z-10"></div>
+    <div class="absolute top-20 left-10 w-20 h-20 rounded-full bg-emerald-400 opacity-20 animate-pulse animate-float" style="animation-delay: 0.5s;"></div>
+    <div class="absolute bottom-1/4 right-20 w-28 h-28 rounded-full bg-teal-400 opacity-20 animate-pulse animate-float" style="animation-delay: 1s;"></div>
+    <div class="absolute top-1/3 right-10 w-16 h-16 rounded-full bg-emerald-300 opacity-15 animate-pulse animate-float" style="animation-delay: 1.5s;"></div>
+
+    <div class="w-full max-w-7xl mx-4">
+        <!-- Main Glass Card -->
+        <div class="glass-card overflow-hidden">
+            <div class="flex flex-col xl:flex-row h-full">
+                <!-- FORMULARIO (lado izquierdo) -->
+                <div class="w-full xl:w-3/4 p-6 md:p-8 form-section">
+                    <div class="flex items-center justify-between flex-wrap gap-3 mb-6 fade-in">
+                        <div class="flex items-center">
+                            <div class="bg-emerald-100 p-3 rounded-xl mr-4 shadow-sm">
+                                <i class="fas fa-store text-emerald-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h1 class="text-3xl font-bold text-gray-800 leading-tight">Ticket de Tiendas</h1>
+                                <p class="text-emerald-700 text-md mt-1 flex items-center gap-2"><i class="fas fa-tag text-xs"></i> Gestión de incidencias de las Tiendas</p>
+                            </div>
+                        </div>
+                        <div class="bg-emerald-50 px-4 py-1.5 rounded-full text-emerald-700 text-xs font-semibold shadow-inner">
+                            <i class="fas fa-store mr-1"></i> Versión Tiendas
+                        </div>
+                    </div>
+
+                    <div class="form-content">
+                        <form id="ticketForm" class="space-y-6 fade-in" style="animation-delay: 0.1s;">
+                            <!-- Datos del solicitante + tienda -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-base font-semibold text-gray-700"><i class="fas fa-user text-emerald-500 mr-1"></i> Nombre *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <input id="name" type="text" required
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect transition duration-200"
+                                            placeholder="Ej: María Rodríguez">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-base font-semibold text-gray-700"><i class="fas fa-store text-emerald-500 mr-1"></i> Tienda *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-location-dot absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <select id="store" required
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect appearance-none transition duration-200">
+                                            <option value="" selected disabled>Seleccione una tienda</option>
+                                            <!-- Lista de tiendas desde TIENDAS_MAP (ordenadas alfabeticamente) -->
+                                            <option value="BABILON">BABILON</option>
+                                            <option value="BARALT">BARALT</option>
+                                            <option value="CABIMAS">CABIMAS</option>
+                                            <option value="CABUDARE">CABUDARE</option>
+                                            <option value="CAGUA">CAGUA</option>
+                                            <option value="CATIA">CATIA</option>
+                                            <option value="CRUZ VERDE">CRUZ VERDE</option>
+                                            <option value="GUANARE">GUANARE</option>
+                                            <option value="GUACARA">GUACARA</option>
+                                            <option value="KAPITANA">KAPITANA</option>
+                                            <option value="MATURIN">MATURIN</option>
+                                            <option value="PROPATRIA">PROPATRIA</option>
+                                            <option value="UPATA">UPATA</option>
+                                            <option value="VALENCIA">VALENCIA</option>
+                                            <option value="VALERA">VALERA</option>
+                                            <option value="MARACAY">MARACAY</option>
+                                            <option value="TIGRE">TIGRE</option>
+                                            <option value="MARACAIBO">MARACAIBO</option>
+                                            <option value="BOLIVAR">BOLIVAR</option>
+                                            <option value="CARORA">CARORA</option>
+                                            <option value="ANACO">ANACO</option>
+                                            <option value="VIGIA">VIGIA</option>
+                                            <option value="CUMANA">CUMANA</option>
+                                            <option value="SAN FERNANDO">SAN FERNANDO</option>
+                                            <option value="VALLES LA PASCUA">VALLES LA PASCUA</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg pointer-events-none"></i>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-base font-semibold text-gray-700"><i class="fas fa-envelope text-emerald-500 mr-1"></i> Técnico de Solicitud *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <select id="tecnico" required
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect appearance-none transition duration-200">
+                                            <option value="" selected disabled>Seleccione una tienda</option>
+                                            <!-- Lista de tiendas desde TIENDAS_MAP (ordenadas alfabeticamente) -->
+                                            <option value="Andres Mayora">Andres Mayora</option>
+                                            <option value="Yoscar Rodriguez">Yoscar Rodriguez</option>
+                                            <option value="Rances Romero">Rances Romero</option>
+                                            <option value="Ricardo Vidal">Ricardo Vidal</option>
+                                            <option value="Simon Vargas">Simon Vargas</option>
+                                            <option value="Jesus Luces">Jesus Luces</option>
+                                            <option value="Luis Valenzuela">Luis Valenzuela</option>
+                                            <option value="Cesar Serrano">Cesar Serrano</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg pointer-events-none"></i>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-base font-semibold text-gray-700"><i class="fas fa-pen-alt text-emerald-500 mr-1"></i> Descripción corta</label>
+                                    <div class="relative">
+                                        <i class="fas fa-comment-dots absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                        <input id="desc" type="text"
+                                            class="w-full pl-10 pr-4 py-3 text-base border border-gray-200 rounded-xl focus:outline-none input-focus-effect transition duration-200"
+                                            placeholder="Detalle adicional (opcional)">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Selector de modo (Incidencias habilitado / Requerimiento deshabilitado) -->
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-4 mb-2 justify-start">
+                                    <span class="text-sm font-semibold text-gray-700">Tipo de solicitud:</span>
+                                    <div class="flex bg-gray-100 rounded-xl p-1">
+                                        <button type="button" id="modoIncidencias" class="modo-btn px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 modo-active shadow-sm">
+                                            <i class="fas fa-clipboard-list mr-1"></i> Incidencias
+                                        </button>
+                                        <button type="button" id="modoRequerimiento" disabled class="modo-btn-disabled px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-gray-500 bg-gray-200 cursor-not-allowed">
+                                            <i class="fas fa-tasks mr-1"></i> Requerimiento
+                                        </button>
+                                    </div>
+                                    <span class="text-xs text-gray-400 ml-2"><i class="fas fa-lock"></i> Módulo en mantenimiento</span>
+                                </div>
+
+                                <!-- Contenedor de incidencias (SIEMPRE visible, pues requerimiento deshabilitado) -->
+                                <div id="incidenciasContainer" class="space-y-3">
+                                    <label class="block text-base font-semibold text-gray-700">📋 Detalle de la Incidencia *</label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <!-- INCIDENCIAS PERSONALIZADAS PARA TIENDAS (ejemplos) -->
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn transition-all">
+                                            <div class="bg-red-100 p-2 rounded-lg mr-3 text-red-600"><i class="fas fa-cash-register"></i></div>
+                                            <div><h3 class="font-medium">Problemas con Stellar / POS</h3><p class="text-xs text-gray-500 mt-1">Falla al facturar, caja desactualizada</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-blue-100 p-2 rounded-lg mr-3 text-blue-600"><i class="fas fa-barcode"></i></div>
+                                            <div><h3 class="font-medium">Problemas con Stellar / Bussines</h3><p class="text-xs text-gray-500 mt-1">Falla con el programa, requiere BD</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-purple-100 p-2 rounded-lg mr-3 text-purple-600"><i class="fas fa-globe"></i></div>
+                                            <div><h3 class="font-medium">Fallas de conectividad / Internet</h3><p class="text-xs text-gray-500 mt-1">Red inestable, datáfono offline</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-yellow-100 p-2 rounded-lg mr-3 text-yellow-700"><i class="fas fa-print"></i></div>
+                                            <div><h3 class="font-medium">Impresora fiscal / ticket no imprime</h3><p class="text-xs text-gray-500 mt-1">Papel atascado, errores de comunicación</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-green-100 p-2 rounded-lg mr-3 text-green-700"><i class="fas fa-box-open"></i></div>
+                                            <div><h3 class="font-medium">Falta de consumibles / suministros</h3><p class="text-xs text-gray-500 mt-1">Rollos de papel, tóner, etiquetas</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-indigo-100 p-2 rounded-lg mr-3 text-indigo-700"><i class="fas fa-chalkboard-user"></i></div>
+                                            <div><h3 class="font-medium">Capacitación / dudas sistema</h3><p class="text-xs text-gray-500 mt-1">Uso del ERP, procedimientos nuevos</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-pink-100 p-2 rounded-lg mr-3 text-pink-600"><i class="fas fa-door-open"></i></div>
+                                            <div><h3 class="font-medium">Avería en Equipos </h3><p class="text-xs text-gray-500 mt-1">Táctil no responde, Equipo requiere cambio</p></div>
+                                        </button>
+                                        <button type="button" class="incident-option flex items-center p-4 border border-gray-200 rounded-xl text-left incident-btn">
+                                            <div class="bg-gray-200 p-2 rounded-lg mr-3 text-gray-700"><i class="fas fa-question-circle"></i></div>
+                                            <div><h3 class="font-medium">Otra incidencia (especificar)</h3><p class="text-xs text-gray-500 mt-1">Situación no listada</p></div>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Contenedor de Requerimientos OCULTO (ya que está deshabilitado) -->
+                                <div id="requerimientosContainer" class="space-y-3 hidden">
+                                    <!-- no se muestra porque el botón está disabled y no debe usarse -->
+                                </div>
+
+                                <input type="hidden" id="incidencia" name="incidencia" value="">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- PANEL DERECHO: VISTA PREVIA Y ACCIONES -->
+                <div class="w-full xl:w-1/3 bg-gradient-to-b from-emerald-50 to-teal-50 p-6 md:p-8 flex flex-col justify-between border-l border-white/50">
+                    <div class="ticket-preview bg-white rounded-2xl shadow-md p-6 mb-6 transform transition-all hover:shadow-lg">
+                        <div class="flex justify-between items-center border-b border-emerald-100 pb-3 mb-3">
+                            <h3 class="text-xs font-bold text-emerald-600 uppercase tracking-wider"><i class="fas fa-eye"></i> Vista previa</h3>
+                            <i class="fas fa-receipt text-emerald-300"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2" id="preview-incidence">
+                            <i class="fas fa-ticket-alt text-emerald-500 text-sm"></i> Ninguna
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <div><p class="text-xs text-gray-500 uppercase font-semibold">Solicitante</p><p class="text-md font-medium text-gray-800" id="preview-name">—</p></div>
+                            <div><p class="text-xs text-gray-500 uppercase font-semibold">Tienda</p><p class="text-md font-medium text-gray-800" id="preview-store">—</p></div>
+                            <div><p class="text-xs text-gray-500 uppercase font-semibold">Fecha reporte</p><p class="text-md font-medium text-gray-800" id="current-date">Cargando...</p></div>
+                            <div><p class="text-xs text-gray-500 uppercase font-semibold">Correo</p><p class="text-sm text-gray-600 truncate" id="preview-email">—</p></div>
+                            <div class="pt-3 border-t border-emerald-50">
+                                <button type="button" onclick="abrirSelectorFoto()" id="btn-foto" 
+                                    class="w-full py-3 px-4 bg-white border-2 border-dashed border-emerald-300 hover:border-emerald-500 hover:bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center transition-all duration-300 group">
+                                    <i class="fas fa-camera mr-2 group-hover:scale-110 transition-transform"></i> 
+                                    <span id="foto-status" class="font-medium text-sm">Anexar Evidencia (Foto)</span>
+                                </button>
+                                <input type="file" id="photoInput" accept="image/jpeg,image/png,image/jpg" class="hidden">
+                                <p id="photo-filename" class="text-xs text-gray-400 mt-2 text-center truncate"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- <div class="bg-emerald-50 rounded-xl p-4 border-l-4 border-emerald-400">
+                            <p class="text-xs text-emerald-800"><i class="fas fa-info-circle mr-1"></i> La evidencia visual acelera la solución. Cualquier duda escribe a <strong>soportetiendas@tioammi.com</strong></p>
+                        </div> -->
+                        
+                        <button type="submit" form="ticketForm" id="enviar" class="btn-glow w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2">
+                            <i class="fas fa-paper-plane"></i> CREAR TICKET · TIENDA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const incidenciaBtns = document.querySelectorAll('.incident-option');
+        const hiddenIncidencia = document.getElementById('incidencia');
+        const previewIncidence = document.getElementById('preview-incidence');
+        const previewName = document.getElementById('preview-name');
+        const previewStore = document.getElementById('preview-store');
+        const previewEmail = document.getElementById('preview-email');
+        const nameInput = document.getElementById('name');
+        const storeSelect = document.getElementById('store');
+        const emailInput = document.getElementById('tecnico');
+        const descInput = document.getElementById('desc');
+        const photoInput = document.getElementById('photoInput');
+        const fotoStatusSpan = document.getElementById('foto-status');
+        const photoFilenameSpan = document.getElementById('photo-filename');
+        const currentDateSpan = document.getElementById('current-date');
+
+        let selectedIncidentText = "";
+        let photoBase64 = null;
+        let photoFileName = "";
+
+        // Fecha actual
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        currentDateSpan.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
+        // Actualizar vista previa en tiempo real
+        function updatePreview() {
+            const nombre = nameInput.value.trim() !== "" ? nameInput.value.trim() : "—";
+            previewName.textContent = nombre;
+            
+            const tienda = storeSelect.value !== "" ? storeSelect.value : "—";
+            previewStore.textContent = tienda;
+            
+            const correo = emailInput.value.trim() !== "" ? emailInput.value.trim() : "—";
+            previewEmail.textContent = correo;
+            
+            if (selectedIncidentText) {
+                previewIncidence.innerHTML = `<i class="fas fa-exclamation-triangle text-emerald-500 text-sm mr-1"></i> ${selectedIncidentText}`;
+            } else {
+                previewIncidence.innerHTML = `<i class="fas fa-ticket-alt text-emerald-500 text-sm mr-1"></i> Pendiente`;
+            }
+        }
+        
+        // Eventos live de inputs
+        nameInput.addEventListener('input', updatePreview);
+        storeSelect.addEventListener('change', updatePreview);
+        emailInput.addEventListener('input', updatePreview);
+        
+        // Manejo selección de incidencia (activo visual y asignación)
+        incidenciaBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // remover active de todos
+                incidenciaBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // extraer texto principal de la incidencia (título)
+                const titleElem = this.querySelector('h3');
+                let incidentTitle = titleElem ? titleElem.innerText : "Otra incidencia";
+                selectedIncidentText = incidentTitle;
+                hiddenIncidencia.value = incidentTitle;
+                updatePreview();
+            });
+        });
+        
+        // Foto: simular selección y almacenar base64 (opcional pero funcional)
+        function abrirSelectorFoto() {
+            photoInput.click();
+        }
+        
+        photoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    Swal.fire("Formato no válido", "Por favor selecciona una imagen (JPEG, PNG)", "warning");
+                    return;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    Swal.fire("Archivo muy grande", "Máximo 5MB", "warning");
+                    return;
+                }
+                photoFileName = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoBase64 = e.target.result;
+                    fotoStatusSpan.innerHTML = '<i class="fas fa-check-circle"></i> Foto adjunta ✅';
+                    photoFilenameSpan.textContent = photoFileName.length > 30 ? photoFileName.substring(0,27)+'...' : photoFileName;
+                    fotoStatusSpan.classList.add('text-emerald-600');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // si cancelaron
+                photoBase64 = null;
+                fotoStatusSpan.innerHTML = 'Anexar Evidencia (Foto)';
+                photoFilenameSpan.textContent = '';
+                fotoStatusSpan.classList.remove('text-emerald-600');
+            }
+        });
+        
+        // Validación y envío del formulario (simulación backend + sweetalert)
+        const submitBtn = document.getElementById('enviar');
+        const form = document.getElementById('ticketForm');
+        
+        async function enviarTicket(event) {
+            if (event) event.preventDefault();
+            
+            // Validaciones básicas
+            const nombre = nameInput.value.trim();
+            const tienda = storeSelect.value;
+            const email = emailInput.value.trim();
+            const incidente = hiddenIncidencia.value;
+            
+            if (!nombre) {
+                Swal.fire("Campo requerido", "Por favor ingresa tu nombre completo", "error");
+                return;
+            }
+            if (!tienda) {
+                Swal.fire("Selecciona tienda", "Debes elegir una tienda para reportar la incidencia", "error");
+                return;
+            }
+            if (!email) {
+                Swal.fire("Técnico requerido", "Necesitamos al técnico encargado", "error");
+                return;
+            }
+            if (!incidente) {
+                Swal.fire("Selecciona una incidencia", "Debes elegir el tipo de incidencia para registrar el ticket", "error");
+                return;
+            }
+            
+            // Construir objeto datos
+            const descripcionCorta = descInput.value.trim() || "Sin detalles extra";
+            const payload = {
+                nombre_completo: nombre,
+                tienda: tienda,
+                correo: email,
+                incidencia: incidente,
+                descripcion: descripcionCorta
+            };
+            
+            // Mostrar loader
+            Swal.fire({
+                title: 'Creando ticket...',
+                text: 'Procesando solicitud',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Aquí puedes enviar a un endpoint real, por ahora simulamos éxito
+            // Ejemplo de integración con fetch si existiera backend: 
+            // const response = await fetch('/api/crear-ticket', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            // Simulación respuesta positiva (tiendas demo)
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '✅ Ticket creado con éxito',
+                    html: `<strong>${incidente}</strong><br/>Tienda: ${tienda}<br/>Revisaremos tu reporte a la brevedad.<br/>Número de seguimiento: #${Math.floor(Math.random()*9000)+1000}`,
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'Entendido'
+                }).then(() => {
+                    // Resetear formulario manteniendo preview limpio? opcional
+                    // Limpiar campos
+                    nameInput.value = '';
+                    storeSelect.value = '';
+                    emailInput.value = '';
+                    descInput.value = '';
+                    selectedIncidentText = '';
+                    hiddenIncidencia.value = '';
+                    incidenciaBtns.forEach(btn => btn.classList.remove('active'));
+                    previewIncidence.innerHTML = `<i class="fas fa-ticket-alt text-emerald-500 text-sm mr-1"></i> Ninguna`;
+                    previewName.textContent = '—';
+                    previewStore.textContent = '—';
+                    previewEmail.textContent = '—';
+                    // reset foto
+                    photoBase64 = null;
+                    photoFileName = "";
+                    photoInput.value = "";
+                    fotoStatusSpan.innerHTML = 'Anexar Evidencia (Foto)';
+                    photoFilenameSpan.textContent = '';
+                    fotoStatusSpan.classList.remove('text-emerald-600');
+                    updatePreview();
+                });
+            }, 1200);
+        }
+        
+        submitBtn.addEventListener('click', enviarTicket);
+        
+        // Inicializar vista previa
+        updatePreview();
+        
+        // Deshabilitar completamente el modo "Requerimiento" y su botón ya tiene disabled, 
+        // adicional aseguramos que no haya interacción con contenedor fantasma
+        const modoRequerimiento = document.getElementById('modoRequerimiento');
+        if(modoRequerimiento) {
+            modoRequerimiento.disabled = true;
+            modoRequerimiento.classList.add('opacity-60', 'cursor-not-allowed');
+        }
+        
+        // Forzar que el contenedor de requerimientos no sea visible (por si acaso)
+        const requerimientosDiv = document.getElementById('requerimientosContainer');
+        if(requerimientosDiv) requerimientosDiv.classList.add('hidden');
+        
+        // Ajuste extra: Al hacer click en botón incidencias (aunque ya está activo)
+        document.getElementById('modoIncidencias').addEventListener('click', () => {
+            // No hacemos nada, solo feedback visual. Este modo siempre activo.
+            Swal.fire("Modo incidencias", "Actualmente solo se reportan incidencias operativas de tienda. Requerimientos deshabilitado temporalmente.", "info");
+        });
+        
+        // mensaje hover para segundo botón
+        const reqBtn = document.getElementById('modoRequerimiento');
+        if(reqBtn) {
+            reqBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                Swal.fire("Módulo deshabilitado", "La sección de requerimientos se encuentra en mantenimiento. Usa el formulario de incidencias.", "info");
+            });
+        }
+        
+        console.log("✨ Sistema de Tickets - Versión Tiendas cargado correctamente");
+    </script>
+</body>
+</html>

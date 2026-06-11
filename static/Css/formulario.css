@@ -72,6 +72,18 @@ body {
     animation: slideIn 0.5s forwards, slideOut 0.5s forwards 2.5s;
 }
 
+/* En tu archivo formulario.css, al final */
+.modo-btn {
+    transition: all 0.2s ease;
+}
+
+#incidenciasContainer, #requerimientosContainer {
+    transition: opacity 0.2s ease;
+}
+.hidden {
+    display: none;
+}
+
 @keyframes slideIn {
     to { transform: translateX(0); }
 }
